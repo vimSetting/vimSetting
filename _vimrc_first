@@ -1,0 +1,107 @@
+" Vim with all enhancements
+source $VIMRUNTIME/vimrc_example.vim
+
+" Plugin 추가
+set nocompatible " Required
+filetype off
+let $vundle='C:/Program Files (x86)/Vim/.vim/bundle/Vundle.vim'
+set rtp+=$vundle		" rtp, 즉 runtimepath($VIMRUNTIME에 Vundle.vim을 추가한다.
+call vundle#begin()
+
+" Let Vundle manage itself.
+Plugin 'gmarik/Vundle.vim'
+Plugin 'scrooloose/nerdtree'	" NERD Tree 추가
+
+" Required, plugins available after.
+call vundle#end()
+filetype plugin indent on
+
+" Use the internal diff if available.
+" Otherwise use the special 'diffexpr' for Windows.
+if &diffopt !~# 'internal'
+  set diffexpr=MyDiff()
+endif
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg1 = substitute(arg1, '!', '\!', 'g')
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg2 = substitute(arg2, '!', '\!', 'g')
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let arg3 = substitute(arg3, '!', '\!', 'g')
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      if empty(&shellxquote)
+        let l:shxq_sav = ''
+        set shellxquote&
+      endif
+      let cmd = '"' . $VIMRUNTIME . '\diff"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  let cmd = substitute(cmd, '!', '\!', 'g')
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
+  if exists('l:shxq_sav')
+    let &shellxquote=l:shxq_sav
+  endif
+endfunction
+
+set lines=40	" 창 크기 width
+set columns=140	" 창 크기 height
+winpos 500 0	" 시작 시 창 위치
+set autoindent		" 자동 들여쓰기
+set cindent
+set nu			" 문단 번호
+set ts=4		" Tab 너비
+set shiftwidth=4	" 자동 인덴트할 때 너비
+set laststatus=2	" 상태바 표시를 향상한다
+set showmatch	" 현재 선택된 괄호의 쌍을 표시
+set guifont=Consolas:h12:cANSI	" 영문 글꼴
+set guifontwide=Dotumche:h12:cDEFAULT	" 한글 글꼴
+set fileencodings=utf8,euc-kr
+set statusline=\ %<%l:%v\ [%p]%=%a\ %h%m%r\ %F\
+
+" 마지막으로 수정된 곳에 커서를 위치함
+au BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\ exe "norm g`\"" |
+\ endif
+
+" Syntax Highlighting
+if has ("syntax")
+	syntax on
+endif
+
+" theme 사용
+"colorscheme molokai
+colorscheme onehalfdark
+
+" keymaps
+let mapleader=","
+
+nnoremap <Leader>rc :rightbelow vnew $MYVIMRC<CR>
+map <Leader>nt <ESC>:NERDTree<CR>
+
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
+" Tree 아이콘 변경.
+let g:NERDTreeDirArrowExpandable = '▶'
+let g:NERDTreeDirArrowCollapsible = '▼'
+
+" 파일없이 vim만 킬 겨우 자동으로 NERD Tree 실행.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" 디렉토리를 vim으로 여는 경우 NERD Tree 실행.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
