@@ -16,6 +16,7 @@ inoremap {<CR> {<CR>}<Esc>O
 inoremap {{ {
 inoremap {} {}
 
+autocmd filetype python nnoremap <F9> :!python %<CR>
 autocmd filetype java nnoremap <F5> :w <bar> !javac %<CR>
 autocmd filetype java nnoremap <F6> :!java %:r<CR>
 autocmd filetype java nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\1<CR> $
