@@ -20,7 +20,6 @@ autocmd filetype java nnoremap <F5> :!java %:r<CR>
 autocmd filetype java nnoremap <C-C> :s/^\(\s*\)/\1\/\/<CR> :s/^\(\s*\)\/\/\/\//\1<CR> $
 
 autocmd filetype python nnoremap <F6> :w <bar> !python %<CR>
-autocmd filetype python nnoremap <F7> <ESC> :w !python %<CR>
 
 autocmd filetype cpp nnoremap <F8> :w <bar> !gcc % -o %:r -Wl,--stack,268435456<CR>
 autocmd filetype cpp nnoremap <F9> :w <bar> !g++ -std=c++14 % -o %:r -Wl,--stack,268435456<CR>
