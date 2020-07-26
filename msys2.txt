@@ -1,0 +1,8 @@
+msys2 gcc, g++ install
+
+1. pacman -Syu
+2. pacman -S base-devel
+3. pacman -S gcc
+4. pacman -S mingw-w64-x86_64-toolchain
+5. pacman -Sy git
+6. pacman -Sy cmake
